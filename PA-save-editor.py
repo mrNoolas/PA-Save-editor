@@ -1,10 +1,9 @@
-from shutil import copy
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
-
-from .GetStaticData import *
-from .SetStaticData import *
+from os import remove, close
+from shutil import move, copy
+from tempfile import mkstemp
 
 
 def write_research_line(file, param, researchval):
