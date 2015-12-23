@@ -3,8 +3,8 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
 
-from GetStaticData import *
-from StaticData import *
+from .GetStaticData import *
+from .SetStaticData import *
 
 
 # This program handles everything to do with the gui. (main)
