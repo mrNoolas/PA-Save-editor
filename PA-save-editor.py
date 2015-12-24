@@ -21,7 +21,7 @@ def write_general_settings(file, misconduct, gangs, decay, visibility, failure_c
     file.write('EnabledVisibility ' + str(visibility) + '\n')
     file.write('FailureConditions ' + str(failure_conditions) + '\n')
     file.write('EnabledEvents ' + str(events) + '\n')
-    file.write('UnlimitedFunds' + str(unlimited_funds) + '\n')
+    file.write('UnlimitedFunds ' + str(unlimited_funds) + '\n')
 
 
 def write_general_to_file(file_path, misconduct, gangs, decay, visibility,
