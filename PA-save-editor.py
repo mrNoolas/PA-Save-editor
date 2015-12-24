@@ -1,152 +1,31 @@
-from tkinter import *
-from tkinter import filedialog
-from tkinter import ttk
 from os import remove, close
 from shutil import move, copy
 from tempfile import mkstemp
+from tkinter import *
+from tkinter import filedialog
+from tkinter import ttk
 
 
 def write_research_line(file, param, researchval):
     # writes a line to the file in research format, based on the type of research and whether the user would like it to
     # be researched (this function was longer in a previous version, but I didn't feel like replacing the function calls
     # with just the one line)
-    file.write('    BEGIN ' + param + '  Desired false  Progress ' + "{:1.7f}".format(researchval / 100) + '  END\n')
+    file.write('    BEGIN ' + param + '  Desired false  Progress ' + "{:1.7f}".format((researchval / 100)) + '  END\n')
 
 
 # These are all the variables: They get a default (0 or False) because it is easier with testing
-def write_general_settings(file, misconduct, gangs, decay, visibility, failure_conditions, events):
+def write_general_settings(file, misconduct, gangs, decay, visibility, failure_conditions, events, unlimited_funds):
     file.write('EnabledMisconduct ' + str(misconduct) + '\n')
     file.write('EnabledGangs ' + str(gangs) + '\n')
     file.write('EnabledDecay ' + str(decay) + '\n')
     file.write('EnabledVisibility ' + str(visibility) + '\n')
     file.write('FailureConditions ' + str(failure_conditions) + '\n')
     file.write('EnabledEvents ' + str(events) + '\n')
-
-
-def write_all_to_file(file_path,
-                      misconduct, gangs, decay, visibility, failure_conditions, events,  # general
-                      balance, bank_loan, credit_rating, ownership, unlimited_funds,  # Finance
-                      maintainance, security, legal, mental_health, finance, cctv,
-                      remote_access, health, cleaning, grounds_keeping, clone, deployment,
-                      patrols, dogs, prison_labour, education, land_expansion, contraband,
-                      policy, armoury, body_armour, tazers, tazers_for_everyone, bank_loans,
-                      lower_taxes_1, lower_taxes_2, extra_grant, advanced_management, death_row,
-                      permanent_punishment, remove_min_cell_size, reduce_execution_liability,
-                      legal_prep, legal_defense  # research
-                      ):
-    # Create temp file
-    fh, abs_path = mkstemp()
-
-    # The save files we are working with are only 20.000 - 100.000 lines long; we therefore don't have to worry about
-    # speed. That is why it opens and closes a file for every block it writes. (this was tested with files up to
-    # 1.870.900 lines long: this results in a max. execution time of about 12 seconds, which isn't too bad, imho)
-    with open(abs_path, 'a') as new_file:
-        with open(file_path, 'r') as old_file:
-            for line in old_file:
-                # General:
-                if 'EnabledMisconduct' in line:
-                    write_general_settings(new_file, misconduct, gangs, decay, visibility, failure_conditions, events)
-                elif 'EnabledGangs' in line or 'EnabledDecay' in line or 'EnabledVisibility' in line \
-                        or 'FailureConditions' in line or 'UnlimitedFunds' in line or 'EnabledEvents' in line:
-                    continue # All these conditions are handled by the function above, this continue makes sure that the line doesn't get copied
-
-                # Finance:
-                elif 'Balance' in line:
-                    new_file.write('Balance ' + str(balance) + '\n')
-                elif 'BankLoan' in line and 'BankLoans' not in line: # extra check for interference with research
-                    new_file.write('BankLoan ' + str(bank_loan) + '\n')
-                elif 'BankCreditRating' in line:
-                    new_file.write('BankCreditRating ' + str(credit_rating) + '\n')
-                elif 'Ownership' in line:
-                    new_file.write('Ownership ' + str(ownership) + '\n')
-
-                # research: (some of the research keywords occur elsewhere in the file. the Desired check makes sure
-                # that this does not interfere) (Desired occurs only once besides the research block and doesn't interfere)
-                elif 'Desired' in line:
-                    if 'Maintainance' in line:
-                        write_research_line(new_file, 'Maintainance', maintainance)
-                    elif 'Security' in line:
-                        write_research_line(new_file, 'Security', security)
-                    elif 'Legal' in line and 'Prep' not in line and 'Defense' not in line:
-                        write_research_line(new_file, 'Legal', legal)
-                    elif 'MentalHealth' in line:
-                        write_research_line(new_file, 'MentalHealth', mental_health)
-                    elif 'Finance' in line:
-                        write_research_line(new_file, 'Finance', finance)
-                    elif 'Cctv' in line:
-                        write_research_line(new_file, 'Cctv', cctv)
-                    elif 'RemoteAccess' in line:
-                        write_research_line(new_file, 'RemoteAccess', remote_access)
-                    elif 'Health' in line:
-                        write_research_line(new_file, 'Health', health)
-                    elif 'Cleaning' in line:
-                        write_research_line(new_file, 'Cleaning', cleaning)
-                    elif 'GroundsKeeping' in line:
-                        write_research_line(new_file, 'GroundsKeeping', grounds_keeping)
-                    elif 'Clone' in line:
-                        write_research_line(new_file, 'Clone', clone)
-                    elif 'Deployment' in line:
-                        write_research_line(new_file, 'Deployment', deployment)
-                    elif 'Patrols' in line:
-                        write_research_line(new_file, 'Patrols', patrols)
-                    elif 'Dogs' in line:
-                        write_research_line(new_file, 'Dogs', dogs)
-                    elif 'PrisonLabour' in line:
-                        write_research_line(new_file, 'PrisonLabour', prison_labour)
-                    elif 'Education' in line:
-                        write_research_line(new_file, 'Education', education)
-                    elif 'LandExpansion' in line:
-                        write_research_line(new_file, 'LandExpansion', land_expansion)
-                    elif 'Contraband' in line:
-                        write_research_line(new_file, 'Contraband', contraband)
-                    elif 'Policy' in line:
-                        write_research_line(new_file, 'Policy', policy)
-                    elif 'Armoury' in line:
-                        write_research_line(new_file, 'Armoury', armoury)
-                    elif 'BodyArmour' in line:
-                        write_research_line(new_file, 'BodyArmour', body_armour)
-                    elif 'Tazers' in line and 'ForEveryone' not in line:
-                        write_research_line(new_file, 'Tazers', tazers)
-                    elif 'TazersForEveryone' in line:
-                        write_research_line(new_file, 'TazersForEveryone', tazers_for_everyone)
-                    elif 'BankLoans' in line:
-                        write_research_line(new_file, 'BankLoans', bank_loans)
-                    elif 'LowerTaxes1' in line:
-                        write_research_line(new_file, 'LowerTaxes1', lower_taxes_1)
-                    elif 'LowerTaxes2' in line:
-                        write_research_line(new_file, 'LowerTaxes2', lower_taxes_2)
-                    elif 'ExtraGrant' in line:
-                        write_research_line(new_file, 'ExtraGrant', extra_grant)
-                    elif 'AdvancedManagement' in line:
-                        write_research_line(new_file, 'AdvancedManagement', advanced_management)
-                    elif 'Deathrow' in line:
-                        write_research_line(new_file, 'Deathrow', death_row)
-                    elif 'PermanentPunishment' in line:
-                        write_research_line(new_file, 'PermanentPunishment', permanent_punishment)
-                    elif 'RemoveMinCellSize' in line:
-                        write_research_line(new_file, 'RemoveMinCellSize', remove_min_cell_size)
-                    elif 'ReduceExecutionLiability' in line:
-                        write_research_line(new_file, 'ReduceExecutionLiability', reduce_execution_liability)
-                    elif 'LegalPrep' in line:
-                        write_research_line(new_file, 'LegalPrep', legal_prep)
-                    elif 'LegalDefense' in line:
-                        write_research_line(new_file, 'LegalDefense', legal_defense)
-
-                # default:
-                else:
-                    new_file.write(line)
-
-    # close writers
-    close(fh)
-
-    # Remove original file
-    remove(file_path)
-    # Move new file
-    move(abs_path, file_path)
+    file.write('UnlimitedFunds' + str(unlimited_funds) + '\n')
 
 
 def write_general_to_file(file_path, misconduct, gangs, decay, visibility,
-                          failure_conditions, events):
+                          failure_conditions, events, unlimited_funds):
     # Create temp file
     fh, abs_path = mkstemp()
 
@@ -158,9 +37,9 @@ def write_general_to_file(file_path, misconduct, gangs, decay, visibility,
             for line in old_file:
                 # General:
                 if 'EnabledMisconduct' in line:
-                    write_general_settings(new_file, misconduct, gangs, decay, visibility, failure_conditions, events)
+                    write_general_settings(new_file, misconduct, gangs, decay, visibility, failure_conditions, events, unlimited_funds)
                 elif 'EnabledGangs' in line or 'EnabledDecay' in line or 'EnabledVisibility' in line \
-                        or 'FailureConditions' in line or 'EnabledEvents' in line:
+                        or 'FailureConditions' in line or 'EnabledEvents' in line or 'UnlimitedFunds' in line:
                     continue # All these conditions are handled by the function above, this continue makes sure that the line doesn't get copied
                 else:
                     new_file.write(line)
@@ -174,7 +53,7 @@ def write_general_to_file(file_path, misconduct, gangs, decay, visibility,
     move(abs_path, file_path)
 
 
-def write_finance_to_file(file_path, balance, bank_loan, credit_rating, ownership, unlimited_funds):
+def write_finance_to_file(file_path, balance, bank_loan, credit_rating, ownership):
     # Create temp file
     fh, abs_path = mkstemp()
 
@@ -193,8 +72,6 @@ def write_finance_to_file(file_path, balance, bank_loan, credit_rating, ownershi
                     new_file.write('BankCreditRating ' + str(credit_rating) + '\n')
                 elif 'Ownership' in line:
                     new_file.write('Ownership ' + str(ownership) + '\n')
-                elif 'UnlimitedFunds' in line:
-                    new_file.write('UnlimitedFunds ' + str(unlimited_funds) + '\n')
                 else:
                     new_file.write(line)
 
@@ -307,7 +184,7 @@ def write_research_to_file(file_path, maintainance, security, legal, mental_heal
     move(abs_path, file_path)
 
 
-def getGeneralSettings(file_path):
+def get_general_settings(file_path):
     misconduct = gangs = decay = visibility = failure_conditions = events = False
 
     with open(file_path, 'r') as file:
@@ -371,7 +248,7 @@ def get_research_settings(file_path):
                 # it should therefore be possible to extract the ^ float using the following:
                 for s in line.split(' '):
                     try:
-                        fl = float(s)
+                        fl = float(s) * 100
                     except ValueError:
                         pass
                 if 'Maintainance' in line:
@@ -449,6 +326,7 @@ def get_research_settings(file_path):
            extra_grant, advanced_management, death_row, permanent_punishment, remove_min_cell_size, \
            reduce_execution_liability, legal_prep, legal_defense
 
+
 # The following handles everything to do with the gui. (main)
 # variables starting with var are default values; when the user changes the value of a ui element,
 # these variables auto change with them. It is therefore very easy to get the current state of ui items.
@@ -457,9 +335,10 @@ def gen_set():
     data in them to the .prison save file. It also manages the unlimited funds checkbox (it automatically disables the
     balance Entry)"""
     write_general_to_file(save_file_path, bool(var_misconduct.get()), bool(var_gangs.get()), bool(var_decay.get()),
-                          bool(var_visibility.get()), bool(var_failure_conditions.get()), bool(var_events.get()))
+                          bool(var_visibility.get()), bool(var_failure_conditions.get()), bool(var_events.get()),
+                          bool(var_unlimited_funds.get()))
     write_finance_to_file(save_file_path, var_balance.get(), var_bank_loan.get(), var_credit_rating.get(),
-                          var_ownership.get(), bool(var_unlimited_funds.get()))
+                          var_ownership.get())
     res_set()
 
     if var_unlimited_funds.get():
@@ -593,7 +472,7 @@ def validate_and_save():
 def set_default_data(file_path):
     """ :param file_path: the file to write to\n
     This function retrieves predetermined data from a given file, and then asigns the values to the global ui-vars"""
-    misconduct, gangs, decay, visibility, failure_conditions, events = getGeneralSettings(file_path)
+    misconduct, gangs, decay, visibility, failure_conditions, events = get_general_settings(file_path)
     var_misconduct.set(misconduct)
     var_gangs.set(gangs)
     var_decay.set(decay)
@@ -656,73 +535,73 @@ def combo_update(var=0):
     selected = combo_var.get()
 
     if 'Maintainance' in selected:
-        var_research_scale.set(maintainance * 100)
+        var_research_scale.set(maintainance)
     elif 'Security' in selected:
-        var_research_scale.set(security * 100)
+        var_research_scale.set(security)
     elif 'Legal' in selected and 'Prep' not in selected and 'Defense' not in selected:
-        var_research_scale.set(legal * 100)
+        var_research_scale.set(legal)
     elif 'Mental Health' in selected:
-        var_research_scale.set(mental_health * 100)
+        var_research_scale.set(mental_health)
     elif 'Finance' in selected:
-        var_research_scale.set(finance * 100)
+        var_research_scale.set(finance)
     elif 'Cctv' in selected:
-        var_research_scale.set(cctv * 100)
+        var_research_scale.set(cctv)
     elif 'Remote Access' in selected:
-        var_research_scale.set(remote_access * 100)
+        var_research_scale.set(remote_access)
     elif 'Health' in selected:
-        var_research_scale.set(health * 100)
+        var_research_scale.set(health)
     elif 'Cleaning' in selected:
-        var_research_scale.set(cleaning * 100)
+        var_research_scale.set(cleaning)
     elif 'Grounds Keeping' in selected:
-        var_research_scale.set(grounds_keeping * 100)
+        var_research_scale.set(grounds_keeping)
     elif 'Clone' in selected:
-        var_research_scale.set(clone * 100)
+        var_research_scale.set(clone)
     elif 'Deployment' in selected:
-        var_research_scale.set(deployment * 100)
+        var_research_scale.set(deployment)
     elif 'Patrols' in selected:
-        var_research_scale.set(patrols * 100)
+        var_research_scale.set(patrols)
     elif 'Dogs' in selected:
-        var_research_scale.set(dogs * 100)
+        var_research_scale.set(dogs)
     elif 'Prison Labour' in selected:
-        var_research_scale.set(prison_labour * 100)
+        var_research_scale.set(prison_labour)
     elif 'Education' in selected:
-        var_research_scale.set(education * 100)
+        var_research_scale.set(education)
     elif 'Land Expansion' in selected:
-        var_research_scale.set(land_expansion * 100)
+        var_research_scale.set(land_expansion)
     elif 'Contraband' in selected:
-        var_research_scale.set(contraband * 100)
+        var_research_scale.set(contraband)
     elif 'Policy' in selected:
-        var_research_scale.set(policy * 100)
+        var_research_scale.set(policy)
     elif 'Armoury' in selected:
-        var_research_scale.set(armoury * 100)
+        var_research_scale.set(armoury)
     elif 'BodyArmour' in selected:
-        var_research_scale.set(body_armour * 100)
+        var_research_scale.set(body_armour)
     elif 'Tazers' in selected and 'For Everyone' not in selected:
-        var_research_scale.set(tazers * 100)
+        var_research_scale.set(tazers)
     elif 'Tazers For Everyone' in selected:
-        var_research_scale.set(tazers_for_everyone * 100)
+        var_research_scale.set(tazers_for_everyone)
     elif 'Bank Loans' in selected:
-        var_research_scale.set(bank_loans * 100)
+        var_research_scale.set(bank_loans)
     elif 'Lower Taxes1' in selected:
-        var_research_scale.set(lower_taxes_1 * 100)
+        var_research_scale.set(lower_taxes_1)
     elif 'Lower Taxes2' in selected:
-        var_research_scale.set(lower_taxes_2 * 100)
+        var_research_scale.set(lower_taxes_2)
     elif 'Extra Grant' in selected:
-        var_research_scale.set(extra_grant * 100)
+        var_research_scale.set(extra_grant)
     elif 'Advanced Management' in selected:
-        var_research_scale.set(advanced_management * 100)
+        var_research_scale.set(advanced_management)
     elif 'Deathrow' in selected:
-        var_research_scale.set(death_row * 100)
+        var_research_scale.set(death_row)
     elif 'Permanent Punishment' in selected:
-        var_research_scale.set(permanent_punishment * 100)
+        var_research_scale.set(permanent_punishment)
     elif 'Remove Min Cell Size' in selected:
-        var_research_scale.set(remove_min_cell_size * 100)
+        var_research_scale.set(remove_min_cell_size)
     elif 'Reduce Execution Liability' in selected:
-        var_research_scale.set(reduce_execution_liability * 100)
+        var_research_scale.set(reduce_execution_liability)
     elif 'Legal Prep' in selected:
-        var_research_scale.set(legal_prep * 100)
+        var_research_scale.set(legal_prep)
     elif 'Legal Defense' in selected:
-        var_research_scale.set(legal_defense * 100)
+        var_research_scale.set(legal_defense)
 
 
 #############

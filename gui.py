@@ -7,7 +7,7 @@ from .GetStaticData import *
 from .SetStaticData import *
 
 
-# This program handles everything to do with the gui. (main)
+# The following handles everything to do with the gui. (main)
 # variables starting with var are default values; when the user changes the value of a ui element,
 # these variables auto change with them. It is therefore very easy to get the current state of ui items.
 def gen_set():
@@ -15,9 +15,10 @@ def gen_set():
     data in them to the .prison save file. It also manages the unlimited funds checkbox (it automatically disables the
     balance Entry)"""
     write_general_to_file(save_file_path, bool(var_misconduct.get()), bool(var_gangs.get()), bool(var_decay.get()),
-                          bool(var_visibility.get()), bool(var_failure_conditions.get()), bool(var_events.get()))
+                          bool(var_visibility.get()), bool(var_failure_conditions.get()), bool(var_events.get()),
+                          bool(var_unlimited_funds.get()))
     write_finance_to_file(save_file_path, var_balance.get(), var_bank_loan.get(), var_credit_rating.get(),
-                          var_ownership.get(), bool(var_unlimited_funds.get()))
+                          var_ownership.get())
     res_set()
 
     if var_unlimited_funds.get():
@@ -151,7 +152,7 @@ def validate_and_save():
 def set_default_data(file_path):
     """ :param file_path: the file to write to\n
     This function retrieves predetermined data from a given file, and then asigns the values to the global ui-vars"""
-    misconduct, gangs, decay, visibility, failure_conditions, events = getGeneralSettings(file_path)
+    misconduct, gangs, decay, visibility, failure_conditions, events = get_general_settings(file_path)
     var_misconduct.set(misconduct)
     var_gangs.set(gangs)
     var_decay.set(decay)
@@ -214,73 +215,73 @@ def combo_update(var=0):
     selected = combo_var.get()
 
     if 'Maintainance' in selected:
-        var_research_scale.set(maintainance * 100)
+        var_research_scale.set(maintainance)
     elif 'Security' in selected:
-        var_research_scale.set(security * 100)
+        var_research_scale.set(security)
     elif 'Legal' in selected and 'Prep' not in selected and 'Defense' not in selected:
-        var_research_scale.set(legal * 100)
+        var_research_scale.set(legal)
     elif 'Mental Health' in selected:
-        var_research_scale.set(mental_health * 100)
+        var_research_scale.set(mental_health)
     elif 'Finance' in selected:
-        var_research_scale.set(finance * 100)
+        var_research_scale.set(finance)
     elif 'Cctv' in selected:
-        var_research_scale.set(cctv * 100)
+        var_research_scale.set(cctv)
     elif 'Remote Access' in selected:
-        var_research_scale.set(remote_access * 100)
+        var_research_scale.set(remote_access)
     elif 'Health' in selected:
-        var_research_scale.set(health * 100)
+        var_research_scale.set(health)
     elif 'Cleaning' in selected:
-        var_research_scale.set(cleaning * 100)
+        var_research_scale.set(cleaning)
     elif 'Grounds Keeping' in selected:
-        var_research_scale.set(grounds_keeping * 100)
+        var_research_scale.set(grounds_keeping)
     elif 'Clone' in selected:
-        var_research_scale.set(clone * 100)
+        var_research_scale.set(clone)
     elif 'Deployment' in selected:
-        var_research_scale.set(deployment * 100)
+        var_research_scale.set(deployment)
     elif 'Patrols' in selected:
-        var_research_scale.set(patrols * 100)
+        var_research_scale.set(patrols)
     elif 'Dogs' in selected:
-        var_research_scale.set(dogs * 100)
+        var_research_scale.set(dogs)
     elif 'Prison Labour' in selected:
-        var_research_scale.set(prison_labour * 100)
+        var_research_scale.set(prison_labour)
     elif 'Education' in selected:
-        var_research_scale.set(education * 100)
+        var_research_scale.set(education)
     elif 'Land Expansion' in selected:
-        var_research_scale.set(land_expansion * 100)
+        var_research_scale.set(land_expansion)
     elif 'Contraband' in selected:
-        var_research_scale.set(contraband * 100)
+        var_research_scale.set(contraband)
     elif 'Policy' in selected:
-        var_research_scale.set(policy * 100)
+        var_research_scale.set(policy)
     elif 'Armoury' in selected:
-        var_research_scale.set(armoury * 100)
+        var_research_scale.set(armoury)
     elif 'BodyArmour' in selected:
-        var_research_scale.set(body_armour * 100)
+        var_research_scale.set(body_armour)
     elif 'Tazers' in selected and 'For Everyone' not in selected:
-        var_research_scale.set(tazers * 100)
+        var_research_scale.set(tazers)
     elif 'Tazers For Everyone' in selected:
-        var_research_scale.set(tazers_for_everyone * 100)
+        var_research_scale.set(tazers_for_everyone)
     elif 'Bank Loans' in selected:
-        var_research_scale.set(bank_loans * 100)
+        var_research_scale.set(bank_loans)
     elif 'Lower Taxes1' in selected:
-        var_research_scale.set(lower_taxes_1 * 100)
+        var_research_scale.set(lower_taxes_1)
     elif 'Lower Taxes2' in selected:
-        var_research_scale.set(lower_taxes_2 * 100)
+        var_research_scale.set(lower_taxes_2)
     elif 'Extra Grant' in selected:
-        var_research_scale.set(extra_grant * 100)
+        var_research_scale.set(extra_grant)
     elif 'Advanced Management' in selected:
-        var_research_scale.set(advanced_management * 100)
+        var_research_scale.set(advanced_management)
     elif 'Deathrow' in selected:
-        var_research_scale.set(death_row * 100)
+        var_research_scale.set(death_row)
     elif 'Permanent Punishment' in selected:
-        var_research_scale.set(permanent_punishment * 100)
+        var_research_scale.set(permanent_punishment)
     elif 'Remove Min Cell Size' in selected:
-        var_research_scale.set(remove_min_cell_size * 100)
+        var_research_scale.set(remove_min_cell_size)
     elif 'Reduce Execution Liability' in selected:
-        var_research_scale.set(reduce_execution_liability * 100)
+        var_research_scale.set(reduce_execution_liability)
     elif 'Legal Prep' in selected:
-        var_research_scale.set(legal_prep * 100)
+        var_research_scale.set(legal_prep)
     elif 'Legal Defense' in selected:
-        var_research_scale.set(legal_defense * 100)
+        var_research_scale.set(legal_defense)
 
 
 #############

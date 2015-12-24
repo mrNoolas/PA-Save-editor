@@ -1,4 +1,4 @@
-def getGeneralSettings(file_path):
+def get_general_settings(file_path):
     misconduct = gangs = decay = visibility = failure_conditions = events = False
 
     with open(file_path, 'r') as file:
@@ -62,7 +62,7 @@ def get_research_settings(file_path):
                 # it should therefore be possible to extract the ^ float using the following:
                 for s in line.split(' '):
                     try:
-                        fl = float(s)
+                        fl = float(s) * 100
                     except ValueError:
                         pass
                 if 'Maintainance' in line:
